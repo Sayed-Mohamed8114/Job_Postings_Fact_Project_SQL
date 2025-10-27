@@ -31,7 +31,7 @@ for my deep dive into the data analysis job market, i harnessed the power of sev
 Each query for this project aimed at investigating specific aspects of the data analyst job market.
 here's how i approached each question :
 
-### 1.top paying data analyst jobs
+### 1.top paying Data Analyst jobs
 
 to identify the highest-paying roles , i filtered the data anlyst positions by average yearly salary and location , focusing on remote jobs. this query highlights the high paying opportinuities in the field.
 
@@ -61,7 +61,123 @@ here's the breakdown of the top data analyst jobs in 2023 :
 - **Diverse Employers:** Companies like SmartAsset , Meta , and AT&T are among those offering high salacies m showing a broad interest across different industries.
 - **Job Title Variety:** there's a high diversity in job titles , from Data Analyst to Director of Analytics , reflecting Varied roles and specializations within data analytics.
 
-Bar graph visualizing the salary for the top 10 salaries for data analysts ; **i generated this with python libraries like matplotlib and pandas**
+Bar graph visualizing the salary for the top salaries for data analysts ; **i generated this with python libraries like matplotlib and pandas**
+![here is the chart for the top paying jobs in data analyst field](assets/top_paying_Roles.png)
+
+#
+
+### 2.top paying job skills
+
+Objective: To analyze how specific skills contribute to high-paying roles across different companies and job titles.
+
+```sql
+with top_paying_jobs as(
+SELECT
+    job_id,
+    job_title,
+    salary_year_avg,
+    name as company_name
+FROM
+    job_postings_fact
+LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
+where
+     job_title_short = 'Data Analyst' AND
+     job_location='Anywhere' AND
+     salary_year_avg IS NOT NULL
+ORDER BY salary_year_avg DESC
+limit 10
+)
+select
+    top_paying_jobs.*,
+    skills
+from top_paying_jobs
+INNER JOIN skills_job_dim on top_paying_jobs.job_id = skills_job_dim.job_id
+inner join skills_dim on skills_job_dim.skill_id = skills_dim.skill_id
+ORDER BY salary_year_avg Desc;
+```
+
+- **Skill Combinations Matter:** High-paying roles like AT&T's Associate Director ($255,830) require diverse skill stacks including SQL, Python, cloud platforms, and big data tools.
+
+- **Industry-Specific Demands:** Pinterest's Marketing Data Analyst role values Hadoop alongside SQL and Python, while healthcare roles emphasize Crystal and Oracle.
+
+- **Leadership Skill Requirements:** Director-level positions require both technical skills (SQL, Python) and workflow tools (Jenkins, Bitbucket, Jira).
+
+- **Emerging Technology Integration:** Roles at companies like Motional and SmartAsset include Go, Snowflake, and GitLab, showing adoption of modern development practices.
+
+**Key Insight: The highest salaries go to professionals who combine traditional analytics skills (SQL, Python) with specialized tools relevant to their industry and modern development workflows.**
+
+Bar graph visualizing the skills for top paying roles in data analysis field ; **i generated this with python libraries like matplotlib and pandas**
+![here is the chart the skills for top paying roles in data analysis field](assets/top_paying_skills.png)
+
+#
+
+### 3.most in demand Skills
+
+Objective: To identify the most frequently requested skills in data analyst job postings, helping job seekers prioritize their learning
+
+```sql
+select
+skills,
+count(skills_job_dim.job_id) as demand_count
+from job_postings_fact
+INNER JOIN skills_job_dim on job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim on skills_job_dim.skill_id = skills_dim.skill_id
+WHERE job_title_short = 'Data Analyst' and job_work_from_home=TRUE
+GROUP BY skills
+ORDER BY demand_count desc
+limit 5;
+```
+
+- **SQL Dominance:** SQL emerges as the clear leader with 7,291 mentions, underscoring its fundamental importance in data extraction and manipulation.
+
+- **Core Technical Stack:** Excel (4,611), Python (4,330), and Tableau (3,745) form the essential toolkit for modern data analysts.
+
+- **Visualization Importance:** Both Tableau and Power BI (2,609) show strong demand, highlighting the critical need for data storytelling and visualization skills.
+
+- **Significant Skill Gaps:** The demand count drops significantly from SQL to Excel, indicating potential opportunities for professionals who master the top skills.
+
+**Key Insight: Mastering SQL provides the strongest foundation, while complementing it with Python and visualization tools creates the most marketable skill set.**
+
+Bar graph visualizing the most in demand skills for data analysts ; **i generated this with python libraries like matplotlib and pandas**
+![here is the chart for the most in demand skills in data analyst field](assets/most_in_demand_skills.png)
+
+#
+
+### 4.top skills based on salary for my role
+
+Objective: To identify which technical skills correlate with the highest compensation in data analyst roles.
+
+- **Big Data Premium:** PySpark leads with $208,172, showing the high value placed on big data processing and distributed computing skills.
+
+-**Development Tools Value:** Bitbucket ($189,154) and specialized databases like Couchbase and Watson ($160,515) command premium salaries.
+
+- **Machine Learning Focus:** DataRobot ($155,485), GitLab ($154,500), and Jupyter ($152,776) demonstrate the salary benefits of ML and development workflow expertise.
+
+-**Cloud & Infrastructure:** Databricks, Linux, and Kubernetes all show salaries above $130,000, indicating the premium for cloud and infrastructure skills.
+
+**Key Insight: Specialized big data tools and development workflow technologies offer the highest salary returns, often exceeding traditional analytics tools.**
+
+Bar graph visualizing top skills based on salary ; **i generated this with python libraries like matplotlib and pandas**
+![here is the chart for the top skills based on salary](assets/top_skills_based_on_salary.png)
+
+#
+
+### 5.most optimal skill to learn
+
+Objective: To identify skills that balance both high demand and attractive compensation, providing the best return on learning investment.
+
+- **High Value Niche Skills:** Go programming leads with $115,320 despite moderate demand (27), showing premium value for specialized expertise.
+
+- **Cloud Platform Dominance:** Snowflake, Azure, and AWS all show strong salaries ($108,000-$113,000) with solid demand (32-37 positions).
+
+- **Traditional Tools Persistence:** Python and Tableau show massive demand (236 and 230 respectively) with respectable salaries around $100,000.
+
+- **Enterprise Tool Value:** Oracle, Looker, and SAS maintain strong positions with good balance of demand and compensation.
+
+**Key Insight: Cloud data platforms (Snowflake, Azure, AWS) offer the optimal balance of high salaries and strong market demand.**
+
+Bar graph visualizing most optimal skills to learn ; **i generated this with python libraries like matplotlib and pandas**
+![here is the chart for the most optimal skills to learn](assets/most_optimal_skills.png)
 
 # What I Learned
 
