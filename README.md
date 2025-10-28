@@ -63,7 +63,7 @@ here's the breakdown of the top data analyst jobs in 2023 :
 
 Bar graph visualizing the salary for the top salaries for data analysts ; **i generated this with python libraries like matplotlib and pandas**
 ![here is the chart for the top paying jobs in data analyst field](assets/top_paying_Roles.png)
-
+<img src='assets/top_paying_Roles.png'></img>
 #
 
 ### 2.top paying job skills
